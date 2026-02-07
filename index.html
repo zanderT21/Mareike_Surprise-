@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mareike 💘</title>
+  <style>
+    :root{
+      --bg1:#ffb7d5;
+      --bg2:#bda7ff;
+      --card:#ffffffdd;
+      --text:#1b1330;
+      --muted:#5a4d78;
+      --accent:#ff3e86;
+      --accent2:#6f5bff;
+      --shadow: 0 18px 50px rgba(27,19,48,.25);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 900px at 20% 10%, #fff6, transparent 60%),
+                  radial-gradient(900px 700px at 90% 30%, #fff4, transparent 55%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+    }
+
+    .wrap{
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      position:relative;
+    }
+
+    .card{
+      width:min(560px, 92vw);
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .topbar{
+      display:flex;
+      gap:10px;
+      padding:14px 18px;
+      align-items:center;
+      border-bottom:1px solid rgba(27,19,48,.08);
+    }
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.r{background:#ff5f57}
+    .dot.y{background:#febc2e}
+    .dot.g{background:#28c840}
+    .topbar .label{
+      margin-left:auto;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.4px;
+    }
+
+    .content{padding:26px 22px 22px}
+    h1{
+      margin:0 0 8px;
+      font-size: clamp(24px, 3.2vw, 34px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.35;
+      font-size: 15px;
+    }
+
+    .stage{display:none}
+    .stage.active{display:block}
+
+    .panel{
+      border-radius: 18px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(27,19,48,.08);
+      padding:16px 16px 14px;
+      box-shadow: 0 12px 30px rgba(27,19,48,.12);
+    }
+
+    .terminal{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color:#221a3f;
+      white-space:pre-wrap;
+      min-height: 132px;
+    }
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.15em;
+      transform: translateY(2px);
+      background: rgba(34,26,63,.9);
+      margin-left:2px;
+      animation: blink 1s steps(1,end) infinite;
+    }
+    @keyframes blink{50%{opacity:0}}
+
+    .btnrow{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 650;
+      cursor:pointer;
+      transition: transform .06s ease, filter .15s ease;
+      user-select:none;
+    }
+    button:active{transform: translateY(1px)}
+    .primary{
+      background: linear-gradient(135deg, var(--accent), #ff7fb0);
+      color:white;
+      box-shadow: 0 12px 26px rgba(255,62,134,.35);
+    }
+    .secondary{
+      background: linear-gradient(135deg, var(--accent2), #9a8cff);
+      color:white;
+      box-shadow: 0 12px 26px rgba(111,91,255,.28);
+    }
+    .ghost{
+      background: rgba(27,19,48,.06);
+      color: var(--text);
+      border: 1px solid rgba(27,19,48,.10);
+    }
+
+    .fine{
+      margin-top:12px;
+      font-size:12.5px;
+      color:var(--muted);
+    }
+
+    .bigAsk{
+      font-size: 18px;
+      font-weight: 750;
+      margin: 12px 0 6px;
+    }
+
+    .plan{
+      margin-top:10px;
+      display:grid;
+      gap:8px;
+      font-size:14px;
+      color:#2a2145;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:fit-content;
+      padding:8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(27,19,48,.08);
+    }
+
+    /* floating hearts background */
+    .hearts{
+      position:absolute; inset:0;
+      pointer-events:none;
+      opacity:.55;
+    }
+    .heart{
+      position:absolute;
+      font-size: 18px;
+      filter: drop-shadow(0 10px 20px rgba(27,19,48,.18));
+      animation: floatUp linear infinite;
+      user-select:none;
+    }
+    @keyframes floatUp{
+      from{transform: translateY(30px) translateX(0) scale(.9); opacity:0}
+      10%{opacity:.95}
+      to{transform: translateY(-110vh) translateX(20px) scale(1.1); opacity:0}
+    }
+
+    /* confetti canvas */
+    canvas#confetti{
+      position:absolute; inset:0;
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hearts" id="hearts"></div>
+    <canvas id="confetti"></canvas>
+
+    <div class="card" role="dialog" aria-label="Valentine page">
+      <div class="topbar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="label">for Mareike 💘</span>
+      </div>
+
+      <div class="content">
+        <!-- STAGE 1 -->
+        <section class="stage active" id="stage1">
+          <h1>Hi Mareike ❤️</h1>
+          <p class="sub">I coded you something small… because you’re kind of my favourite person.</p>
+          <div class="panel">
+            <p class="sub" style="margin:0 0 10px">
+              Tap the button when you’re ready.
+            </p>
+            <div class="btnrow">
+              <button class="primary" id="btnOpen">Open ✨</button>
+              <button class="ghost" id="btnPeek">Peek 👀</button>
+            </div>
+            <div class="fine">Tip: sound off is totally fine — this is purely vibes.</div>
+          </div>
+        </section>
+
+        <!-- STAGE 2 -->
+        <section class="stage" id="stage2">
+          <h1>Okay… here we go 💞</h1>
+          <p class="sub">Just one tiny “program” running…</p>
+          <div class="panel">
+            <div class="terminal" id="terminal"></div><span class="cursor" id="cursor"></span>
+          </div>
+
+          <div class="btnrow">
+            <button class="secondary" id="btnSkip">Skip typing →</button>
+          </div>
+
+          <div class="panel" style="margin-top:14px">
+            <div class="bigAsk">Will you be my Valentine?</div>
+            <div class="sub" style="margin:0">Sal jy my Valentyn wees? 🥺💘</div>
+            <div class="btnrow">
+              <button class="primary" id="btnYes">Yes 💗</button>
+              <button class="secondary" id="btnYes2">Yes (obviously) 😌</button>
+              <button class="ghost" id="btnNo">No</button>
+            </div>
+            <div class="fine">(*The “No” button is… not very powerful.)</div>
+          </div>
+        </section>
+
+        <!-- STAGE 3 -->
+        <section class="stage" id="stage3">
+          <h1>Yay!! 🥹💘</h1>
+          <p class="sub">You just made my whole day. I love you, Mareike.</p>
+
+          <div class="panel">
+            <div class="bigAsk">Valentine’s mission: accepted ✅</div>
+            <div class="plan">
+              <div class="pill">📅 <span id="dateLine">Date: (set this in the code)</span></div>
+              <div class="pill">🕖 <span id="timeLine">Time: (set this in the code)</span></div>
+              <div class="pill">🍓 <span id="planLine">Plan: (set this in the code)</span></div>
+            </div>
+
+            <div class="btnrow" style="margin-top:14px">
+              <button class="primary" id="btnReplay">Replay 💞</button>
+              <button class="ghost" id="btnCopy">Copy a cute message 📋</button>
+            </div>
+            <div class="fine" id="copyHint"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Customize these ======
+    const DETAILS = {
+      date: "Friday, 14 February",
+      time: "den ganze Tag",
+      signature: "— Zander, jou outjie"
+    };
+
+    // Terminal script (cute + romantic)
+    const LINES = [
+      "> initializing_heart.exe",
+      "> checking compatibility...",
+      "  result: perfek!",
+      "> message_for_mareike.txt",
+      "",
+      "Mareike,",
+      "Ich bin unglaublish verliebt in dich.",
+      "In my life, I love you more",
+      "I have never had a Valentine before, and I know this is a bit different from the conventional...",
+      "but I choose you! I choose you every day for the rest of my life",
+      "mooiste mens, sal jy by my bly? and float with me on this bal in space?",
+      "",
+      "Mareike, my soulmate, love of my life... :"
+    ];
+
+    // ====== Minimal app state ======
+    const stage1 = document.getElementById("stage1");
+    const stage2 = document.getElementById("stage2");
+    const stage3 = document.getElementById("stage3");
+
+    const terminal = document.getElementById("terminal");
+    const cursor = document.getElementById("cursor");
+
+    const btnOpen = document.getElementById("btnOpen");
+    const btnPeek = document.getElementById("btnPeek");
+    const btnSkip = document.getElementById("btnSkip");
+
+    const btnYes = document.getElementById("btnYes");
+    const btnYes2 = document.getElementById("btnYes2");
+    const btnNo = document.getElementById("btnNo");
+
+    const btnReplay = document.getElementById("btnReplay");
+    const btnCopy = document.getElementById("btnCopy");
+    const copyHint = document.getElementById("copyHint");
+
+    // Fill details on stage 3
+    document.getElementById("dateLine").textContent = "Date: " + DETAILS.date;
+    document.getElementById("timeLine").textContent = "Time: " + DETAILS.time;
+    document.getElementById("planLine").textContent = "Plan: " + DETAILS.plan;
+
+    function showStage(n){
+      [stage1, stage2, stage3].forEach(s => s.classList.remove("active"));
+      (n===1?stage1:n===2?stage2:stage3).classList.add("active");
+    }
+
+    // ====== Heart background ======
+    const heartsEl = document.getElementById("hearts");
+    const heartChars = ["💗","💖","💘","💞","💕","💝"];
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+      const left = Math.random()*100;
+      const dur = 6 + Math.random()*6;
+      const size = 14 + Math.random()*18;
+      h.style.left = left + "vw";
+      h.style.fontSize = size + "px";
+      h.style.animationDuration = dur + "s";
+      h.style.top = (100 + Math.random()*10) + "vh";
+      heartsEl.appendChild(h);
+      setTimeout(()=>h.remove(), dur*1000);
+    }
+    const heartTimer = setInterval(spawnHeart, 450);
+
+    // ====== Typing effect ======
+    let typing = false;
+    let typingCancelled = false;
+
+    async function typeLines(){
+      typing = true;
+      typingCancelled = false;
+      terminal.textContent = "";
+      cursor.style.display = "inline-block";
+
+      for (let i=0; i<LINES.length; i++){
+        if (typingCancelled) break;
+        const line = LINES[i];
+        await typeText(line + "\n", 18);
+        // small pauses for rhythm
+        if (line.startsWith(">")) await sleep(200);
+        if (line === "") await sleep(160);
+      }
+
+      if (!typingCancelled){
+        await sleep(250);
+        await typeText("Will you be my Valentine? ❤️\n", 14);
+      }
+
+      typing = false;
+      cursor.style.display = "none";
+    }
+
+    async function typeText(text, speed){
+      for (const ch of text){
+        if (typingCancelled) return;
+        terminal.textContent += ch;
+        await sleep(speed + Math.random()*12);
+      }
+    }
+
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+    function skipTyping(){
+      typingCancelled = true;
+      terminal.textContent = LINES.join("\n") + "\nWill you be my Valentine? ❤️\n";
+      cursor.style.display = "none";
+      typing = false;
+    }
+
+    // ====== Confetti ======
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let confettiPieces = [];
+    let confettiOn = false;
+
+    function resize(){
+      canvas.width = window.innerWidth * devicePixelRatio;
+      canvas.height = window.innerHeight * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function startConfetti(){
+      confettiOn = true;
+      confettiPieces = Array.from({length: 220}, () => ({
+        x: Math.random()*window.innerWidth,
+        y: -20 - Math.random()*window.innerHeight*0.3,
+        w: 6 + Math.random()*6,
+        h: 8 + Math.random()*10,
+        vx: -1.2 + Math.random()*2.4,
+        vy: 2 + Math.random()*5,
+        rot: Math.random()*Math.PI,
+        vr: -0.08 + Math.random()*0.16,
+        alpha: 0.7 + Math.random()*0.3
+      }));
+      requestAnimationFrame(tickConfetti);
+      setTimeout(()=>{ confettiOn = false; }, 3500);
+    }
+
+    function tickConfetti(){
+      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+      for (const p of confettiPieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.vy += 0.04; // gravity-ish
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+      confettiPieces = confettiPieces.filter(p => p.y < window.innerHeight + 40);
+      if (confettiOn || confettiPieces.length) requestAnimationFrame(tickConfetti);
+      else ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    }
+
+    // ====== Button logic ======
+    btnOpen.addEventListener("click", () => {
+      showStage(2);
+      typeLines();
+    });
+
+    btnPeek.addEventListener("click", () => {
+      showStage(2);
+      // show a tiny preview without typing
+      terminal.textContent = "> hint: this ends with a question ❤️\n";
+      cursor.style.display = "none";
+    });
+
+    btnSkip.addEventListener("click", () => skipTyping());
+
+    function accept(){
+      showStage(3);
+      startConfetti();
+    }
+    btnYes.addEventListener("click", accept);
+    btnYes2.addEventListener("click", accept);
+
+    // "No" button politely refuses to be clicked 😄
+    btnNo.addEventListener("mouseenter", () => {
+      const dx = (Math.random() < 0.5 ? -1 : 1) * (40 + Math.random()*80);
+      const dy = (Math.random() < 0.5 ? -1 : 1) * (10 + Math.random()*50);
+      btnNo.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btnNo.addEventListener("click", () => {
+      btnNo.textContent = "Nice try 😄";
+      setTimeout(()=>btnNo.textContent="No", 1200);
+    });
+
+    btnReplay.addEventListener("click", () => {
+      btnNo.style.transform = "translate(0,0)";
+      showStage(1);
+    });
+
+    btnCopy.addEventListener("click", async () => {
+      const msg =
+`Mareike 💘
+Will you be my Valentine?
+Sal jy my Valentyn wees? ❤️
+
+${DETAILS.plan}
+${DETAILS.signature}`;
+      try{
+        await navigator.clipboard.writeText(msg);
+        copyHint.textContent = "Copied! Now go be smooth 😌";
+        setTimeout(()=>copyHint.textContent="", 2000);
+      }catch{
+        copyHint.textContent = "Couldn’t auto-copy on this browser — just screenshot it 💞";
+        setTimeout(()=>copyHint.textContent="", 2500);
+      }
+    });
+  </script>
+</body>
+</html>
